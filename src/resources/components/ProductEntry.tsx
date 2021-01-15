@@ -17,7 +17,7 @@ function ProductEntry({ title, description, path }: { title: string, description
                         <button className="inline-flex text-white bg-indigo-500 border-0 py-1 px-4 focus:outline-none hover:bg-indigo-600 rounded">Book Demo</button>
                     </Link>
 
-                    <Link to="/products/:id" className="text-indigo-400 inline-flex items-center ml-4">Learn More
+                    <Link to={`/products/${path}`} className="text-indigo-400 inline-flex items-center ml-4">Learn More
           <svg fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" className="w-4 h-4 ml-2" viewBox="0 0 24 24">
                             <path d="M5 12h14M12 5l7 7-7 7"></path>
                         </svg>

@@ -1,7 +1,22 @@
-import React from 'react'
+import React, { useState, useEffect } from 'react'
+import { db } from '../../firebaseConfig'
 import ProductEntry from '../components/ProductEntry'
 
 function Products() {
+    const [products, setProducts]: any = useState([])
+    useEffect(() => {
+        db.collection("Products").onSnapshot((snapshot) =>
+            setProducts(
+                snapshot.docs.map((doc) => ({
+                    id: doc.id,
+                    data: doc.data()
+                }))
+            )
+        );
+    }, [])
+
+
+
     return (
         <section className="text-gray-400 bg-gray-900 body-font">
             <div className="container px-5 py-24 mx-auto">
@@ -13,40 +28,13 @@ function Products() {
                     </div>
                 </div>
                 <div className="flex flex-wrap sm:-m-4 -mx-4 -mb-10 -mt-4 md:space-y-0 space-y-6">
-                    <ProductEntry title='Flex Performance'
-                        description='Fléx Performance is a performance, productivity and talent management software for helping organisations monitor and evaluate the execution and results on strategy, projects and ad hoc responsibilities by employees.'
-                        path=''
-                    />
-                    <ProductEntry title='Flex CRM'
-                        description='Fléx CRM is a Customer Relationship Management System that works with our Call Center or Contact center Solutions in capturing and keeping records of customers and their enquiries.'
-                        path=''
-                    />
-                    <ProductEntry title='Flex Payroll'
-                        description='Fléx Payroll is the HR & Payroll, leave and learning development management.'
-                        path=''
-                    />
-                    <ProductEntry title='Fléx Stock and Inventory'
-                        description='Fléx Stock Inventory is fully integrated set of modules that completely controls your inventory cycle.'
-                        path=''
-                    />
-                    <ProductEntry title='Fléx HR'
-                        description='Fléx HR was built with an understanding that the great capital of any organisation is in its Human Capital.'
-                        path=''
-                    />
-                    <ProductEntry title='Fléx Asset'
-                        description='Fléx Asset is a software product for managing fixed assets and property from procurement application and approval to asset/property operations/transactions and disposal.'
-                        path=''
-                    />
-                    <ProductEntry title='Fléx Property'
-                        description='Fléx Property is a property and facility management software built to give control to property and facility managers in managing space utilization, rent contracts, payments, utilities, machinery and invoicing in the property.'
-                        path=''
-                    /> <ProductEntry title='Fléx Boardroom'
-                        description='Fléx Boardroom is a paperless boardroom management software for the board and executive management’s effectiveness and flexibility.'
-                        path=''
-                    /> <ProductEntry title='Fléx FX'
-                        description='Fléx Fx is a foreign exchange management system for managing and reporting foreign exchange transactions with account holders, corporate clients, walk-in clients and other banks.'
-                        path=''
-                    />
+                    {products.map(({ id, data: { product, details, summary } }: { id: string, data: { product: string, details: string, summary: string } }) => (
+                        <ProductEntry
+                            key={id}
+                            title={product}
+                            description={summary}
+                            path={id} />
+                    ))}
                 </div>
             </div>
         </section>
