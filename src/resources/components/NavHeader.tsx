@@ -13,7 +13,7 @@ function NavHeader() {
                         <span className="ml-3 text-xl">CITS</span>
                     </Link>
                     <nav className="md:ml-auto flex flex-wrap items-center text-base justify-center">
-                        <Link to="https://google.com" className="mr-5 hover:text-white">About Us</Link>
+                        <Link to="/about" className="mr-5 hover:text-white">About Us</Link>
                         <Link to="/products" className="mr-5 hover:text-white">Our Products</Link>
                         <Link to="/bookdemo" className="mr-5 hover:text-white">Book a demo</Link>
                         <Link to="/contact" className="mr-5 hover:text-white">Contact Us</Link>

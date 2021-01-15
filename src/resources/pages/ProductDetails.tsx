@@ -1,11 +1,11 @@
 import React from 'react'
 
-function BookDemo() {
+function ProductDetails() {
     return (
         <div>
-            <h1>Hello</h1>
+
         </div>
     )
 }
 
-export default BookDemo
+export default ProductDetails

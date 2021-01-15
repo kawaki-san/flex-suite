@@ -6,6 +6,9 @@ import Home from './resources/pages/Home';
 import ContactUs from './resources/pages/ContatUs';
 import Products from './resources/pages/Products';
 import { Switch, Route } from 'react-router-dom'
+import BookDemo from './resources/pages/BookDemo';
+import ProductDetails from './resources/pages/ProductDetails';
+import AboutUs from './resources/pages/AboutUs';
 
 function App() {
   return (
@@ -15,7 +18,10 @@ function App() {
       <Switch>
         <Route exact path='/' component={Home} />
         <Route path='/products' component={Products} />
+        <Route path='/products/:id' component={ProductDetails} />
+        <Route path='/bookdemo' component={BookDemo} />
         <Route path='/contact' component={ContactUs} />
+        <Route path='/about' component={AboutUs} />
       </Switch>
 
       <Footer />

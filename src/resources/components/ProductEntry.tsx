@@ -1,4 +1,5 @@
 import React from 'react'
+import { Link } from 'react-router-dom'
 
 function ProductEntry({ title, description, path }: { title: string, description: string, path: string }) {
     return (
@@ -11,11 +12,18 @@ function ProductEntry({ title, description, path }: { title: string, description
             <div className="flex-grow">
                 <h2 className="text-white text-lg title-font font-medium mb-3">{title}</h2>
                 <p className="leading-relaxed text-base">{description}</p>
-                <a href={path} className="mt-3 text-indigo-400 inline-flex items-center">Learn More
-            <svg fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" className="w-4 h-4 ml-2" viewBox="0 0 24 24">
-                        <path d="M5 12h14M12 5l7 7-7 7"></path>
-                    </svg>
-                </a>
+                <div className=" md:mt-4 mt-6 inline-flex items-center">
+                    <Link to='/bookdemo/:id'>
+                        <button className="inline-flex text-white bg-indigo-500 border-0 py-1 px-4 focus:outline-none hover:bg-indigo-600 rounded">Book Demo</button>
+                    </Link>
+
+                    <Link to="/products/:id" className="text-indigo-400 inline-flex items-center ml-4">Learn More
+          <svg fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" className="w-4 h-4 ml-2" viewBox="0 0 24 24">
+                            <path d="M5 12h14M12 5l7 7-7 7"></path>
+                        </svg>
+                    </Link>
+                </div>
+
             </div>
         </div>
     )
