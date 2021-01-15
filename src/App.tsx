@@ -5,14 +5,23 @@ import NavHeader from './resources/components/NavHeader';
 import Home from './resources/pages/Home';
 import ContactUs from './resources/pages/ContatUs';
 import Products from './resources/pages/Products';
+import { Switch, Route } from 'react-router-dom'
 
 function App() {
   return (
+
     <div className="app">
       <NavHeader />
-      <ContactUs />
+      <Switch>
+        <Route exact path='/' component={Home} />
+        <Route path='/products' component={Products} />
+        <Route path='/contact' component={ContactUs} />
+      </Switch>
+
       <Footer />
     </div>
+
+
   );
 }
 
