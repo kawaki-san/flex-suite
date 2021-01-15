@@ -13,7 +13,7 @@ function Footer() {
                         </svg>
                         <span className="ml-3 text-xl">CITS</span>
                     </a>
-                    <p className="mt-2 text-sm text-gray-500">Air plant banjo lyft occupy retro adaptogen indego</p>
+                    <p className="mt-2 text-sm text-gray-500">Corporate Information Technology Solutions Limited</p>
                 </div>
                 <div className="flex-grow flex flex-wrap md:pr-20 -mb-10 md:text-left text-center order-first">
                     <div className="lg:w-1/4 md:w-1/2 w-full px-4">
@@ -96,7 +96,7 @@ function Footer() {
             <div className="bg-gray-800 bg-opacity-75">
                 <div className="container mx-auto py-4 px-5 flex flex-wrap flex-col sm:flex-row">
                     <p className="text-gray-400 text-sm text-center sm:text-left">© 2020 CITS —
-        <a href="https://www.spectorware.com" className="text-gray-500 ml-1" rel="noopener noreferrer" target="_blank">SpectorWare</a>
+        <a href="https://www.cits.co.tz" className="text-gray-500 ml-1" rel="noopener noreferrer" target="_blank">Corporate Information Technology Solutions Limited - CITS</a>
                     </p>
                     <span className="inline-flex sm:ml-auto sm:mt-0 mt-2 justify-center sm:justify-start">
                         <a className="text-gray-400">
