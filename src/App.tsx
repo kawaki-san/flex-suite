@@ -17,9 +17,10 @@ function App() {
       <NavHeader />
       <Switch>
         <Route exact path='/' component={Home} />
-        <Route path='/products' component={Products} />
+        <Route exact path='/products' component={Products} />
         <Route path='/products/:id' component={ProductDetails} />
-        <Route path='/bookdemo' component={BookDemo} />
+        <Route exact path='/bookdemo' component={BookDemo} />
+        <Route path='/bookdemo/:id' component={BookDemo} />
         <Route path='/contact' component={ContactUs} />
         <Route path='/about' component={AboutUs} />
       </Switch>
