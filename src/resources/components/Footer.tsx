@@ -1,5 +1,7 @@
 import React from 'react'
-
+import MailOutlineOutlinedIcon from '@material-ui/icons/MailOutlineOutlined';
+import PhoneEnabledOutlinedIcon from '@material-ui/icons/PhoneEnabledOutlined';
+import LocationOnOutlinedIcon from '@material-ui/icons/LocationOnOutlined';
 function Footer() {
     return (
         <footer className="text-gray-400 bg-gray-900 body-font">
@@ -9,7 +11,7 @@ function Footer() {
                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" className="w-10 h-10 text-white p-2 bg-indigo-500 rounded-full" viewBox="0 0 24 24">
                             <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"></path>
                         </svg>
-                        <span className="ml-3 text-xl">Tailblocks</span>
+                        <span className="ml-3 text-xl">CITS</span>
                     </a>
                     <p className="mt-2 text-sm text-gray-500">Air plant banjo lyft occupy retro adaptogen indego</p>
                 </div>
@@ -71,13 +73,18 @@ function Footer() {
                         <h2 className="title-font font-medium text-white tracking-widest text-sm mb-3">CONTACTS</h2>
                         <nav className="list-none mb-10">
                             <li>
-                                <a className="text-gray-400 hover:text-white">First Link</a>
+                                <a href='frontdesk@cits.co.tz' className="text-gray-400 hover:text-white">frontdesk@cits.co.tz</a>
+                                <span> </span>
+                                <MailOutlineOutlinedIcon />
                             </li>
                             <li>
-                                <a className="text-gray-400 hover:text-white">Second Link</a>
+                                <a className="text-gray-400 hover:text-white">+255 222 771 368</a>
+                                <span> </span>
+                                <PhoneEnabledOutlinedIcon />
                             </li>
                             <li>
-                                <a className="text-gray-400 hover:text-white">Third Link</a>
+                                <br />
+                                <p className="text-gray-400 hover:text-white">P.O Box No. 34603 <br />Abla Complex, 2nd floor, office No. 202 <br />Rose Garden Road, Mikocheni A <br />Dar Es Salaam, Tanzania </p>
                             </li>
                             <li>
                                 <a className="text-gray-400 hover:text-white">Fourth Link</a>
@@ -88,7 +95,7 @@ function Footer() {
             </div>
             <div className="bg-gray-800 bg-opacity-75">
                 <div className="container mx-auto py-4 px-5 flex flex-wrap flex-col sm:flex-row">
-                    <p className="text-gray-400 text-sm text-center sm:text-left">© 2020 Tailblocks —
+                    <p className="text-gray-400 text-sm text-center sm:text-left">© 2020 CITS —
         <a href="https://twitter.com/knyttneve" className="text-gray-500 ml-1" rel="noopener noreferrer" target="_blank">@knyttneve</a>
                     </p>
                     <span className="inline-flex sm:ml-auto sm:mt-0 mt-2 justify-center sm:justify-start">
