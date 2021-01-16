@@ -1,8 +1,23 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import MailOutlineOutlinedIcon from '@material-ui/icons/MailOutlineOutlined';
 import PhoneEnabledOutlinedIcon from '@material-ui/icons/PhoneEnabledOutlined';
+import { db } from '../../firebaseConfig';
+import QuickLink from './QuickLink';
 
 function Footer() {
+    const [products, setProducts]: any = useState([])
+    useEffect(() => {
+        db.collection("Products").onSnapshot((snapshot) =>
+            setProducts(
+                snapshot.docs.map((doc) => ({
+                    id: doc.id,
+                    data: doc.data()
+                }))
+            )
+        );
+    }, [])
+
+
     return (
         <footer className="text-gray-400 bg-gray-900 body-font">
             <div className="container px-5 py-24 mx-auto flex md:items-center lg:items-start md:flex-row md:flex-nowrap flex-wrap flex-col">
@@ -16,45 +31,17 @@ function Footer() {
                     <p className="mt-2 text-sm text-gray-500">Corporate Information Technology Solutions Limited</p>
                 </div>
                 <div className="flex-grow flex flex-wrap md:pr-20 -mb-10 md:text-left text-center order-first">
-                    <div className="lg:w-1/4 md:w-1/2 w-full px-4">
+                    <div className="lg:w-1/3 md:w-1/2 w-full px-4">
                         <h2 className="title-font font-medium text-white tracking-widest text-sm mb-3">QUICK LINKS</h2>
                         <nav className="list-none mb-10">
-                            <li>
-                                <a className="text-gray-400 hover:text-white">Flex Performance</a>
-                            </li>
-                            <li>
-                                <a className="text-gray-400 hover:text-white">Flex CRM</a>
-                            </li>
-                            <li>
-                                <a className="text-gray-400 hover:text-white">Flex Payroll</a>
-                            </li>
-                            <li>
-                                <a className="text-gray-400 hover:text-white">Flex Stock and Inventory</a>
-                            </li>
-                            <li>
-                                <a className="text-gray-400 hover:text-white">Flex HR</a>
-                            </li>
+                            {products.map(({ id, data: { product } }: { id: string, data: { product: string } }) => (
+                                <QuickLink product={{ product: product, url: id }}
+                                    key={id}
+                                />
+                            ))}
                         </nav>
                     </div>
-                    <div className="lg:w-1/4 md:w-1/2 w-full px-4">
-                        <h2 className="title-font font-medium text-white tracking-widest text-sm mb-3">QUICK LINKS</h2>
-                        <nav className="list-none mb-10">
-
-                            <li>
-                                <a className="text-gray-400 hover:text-white">Flex Asset</a>
-                            </li>
-                            <li>
-                                <a className="text-gray-400 hover:text-white">Flex Property</a>
-                            </li>
-                            <li>
-                                <a className="text-gray-400 hover:text-white">Flex Boardroom</a>
-                            </li>
-                            <li>
-                                <a className="text-gray-400 hover:text-white">Flex FX</a>
-                            </li>
-                        </nav>
-                    </div>
-                    <div className="lg:w-1/4 md:w-1/2 w-full px-4">
+                    <div className="lg:w-1/3 md:w-1/2 w-full px-4">
                         <h2 className="title-font font-medium text-white tracking-widest text-sm mb-3">OTHER SERVICES</h2>
                         <nav className="list-none mb-10">
                             <li>
@@ -85,9 +72,6 @@ function Footer() {
                             <li>
                                 <br />
                                 <p className="text-gray-400 hover:text-white">P.O Box No. 34603 <br />Abla Complex, 2nd floor, office No. 202 <br />Rose Garden Road, Mikocheni A <br />Dar Es Salaam, Tanzania </p>
-                            </li>
-                            <li>
-                                <a className="text-gray-400 hover:text-white">Fourth Link</a>
                             </li>
                         </nav>
                     </div>

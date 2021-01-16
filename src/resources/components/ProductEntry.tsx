@@ -1,7 +1,14 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
 
-function ProductEntry({ title, description, path }: { title: string, description: string, path: string }) {
+interface iProduct {
+    product: string;
+    description: string;
+    path: string;
+    benefit?: Array<string>;
+}
+
+function ProductEntry({ currentProduct }: { currentProduct: iProduct }) {
     return (
         <div className="p-4 md:w-1/3 flex flex-col text-center items-center">
             <div className="w-20 h-20 inline-flex items-center justify-center rounded-full bg-gray-800 text-indigo-400 mb-5 flex-shrink-0">
@@ -10,19 +17,20 @@ function ProductEntry({ title, description, path }: { title: string, description
                 </svg>
             </div>
             <div className="flex-grow">
-                <h2 className="text-white text-lg title-font font-medium mb-3">{title}</h2>
-                <p className="leading-relaxed text-base">{description}</p>
+                <h2 className="text-white text-lg title-font font-medium mb-3">{currentProduct.product}</h2>
+                <p className="leading-relaxed text-base">{currentProduct.description}</p>
                 <div className=" md:mt-4 mt-6 inline-flex items-center">
                     <Link to='/bookdemo/:id'>
                         <button className="inline-flex text-white bg-indigo-500 border-0 py-1 px-4 focus:outline-none hover:bg-indigo-600 rounded">Book Demo</button>
                     </Link>
 
-                    <Link to={`/products/${path}`} className="text-indigo-400 inline-flex items-center ml-4">Learn More
+                    <Link to={`/products/${currentProduct.path}`} className="text-indigo-400 inline-flex items-center ml-4">Learn More
           <svg fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" className="w-4 h-4 ml-2" viewBox="0 0 24 24">
                             <path d="M5 12h14M12 5l7 7-7 7"></path>
                         </svg>
                     </Link>
                 </div>
+
 
             </div>
         </div>

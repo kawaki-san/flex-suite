@@ -9,11 +9,7 @@ interface Product {
     benefit: Array<string>;
 }
 
-function ProductInfo({ product }: { product: Product }) {
-
-    product.benefit.forEach((item) => {
-        console.log(item)
-    })
+function ProductInfo({ currentItem }: { currentItem: Product }) {
 
 
     return (
@@ -25,7 +21,7 @@ function ProductInfo({ product }: { product: Product }) {
                             <img alt="content" className="object-cover object-center h-full w-full" src="https://dummyimage.com/1200x500" />
                         </div>
                         <div className="text-center mt-10">
-                            <p className="text-base leading-relaxed xl:w-2/4 lg:w-3/4 mx-auto text-gray-400 text-opacity-80">{product.summary}</p>
+                            <p className="text-base leading-relaxed xl:w-2/4 lg:w-3/4 mx-auto text-gray-400 text-opacity-80">{currentItem.summary}</p>
                         </div>
                         <div className="flex flex-col sm:flex-row mt-10">
                             <div className="sm:w-1/3 text-center sm:pr-8 sm:py-8">
@@ -34,13 +30,13 @@ function ProductInfo({ product }: { product: Product }) {
                                     <div className="w-12 h-1 bg-indigo-500 rounded mt-2 mb-4"></div>
 
                                     <nav className="flex flex-col sm:items-start sm:text-left text-center items-center -mb-1 space-y-2">
-                                        {product.benefit.map((item) => {
+                                        {currentItem.benefit.map(({ item }: any) => {
                                             return <Benefit title={item} />
                                         })}
                                     </nav>
                                 </div>
                             </div>
-                            <ProductDetailText description={product.details} />
+                            <ProductDetailText description={currentItem.details} />
                         </div>
                     </div>
                 </div>

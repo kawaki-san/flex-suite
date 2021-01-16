@@ -29,11 +29,9 @@ function Products() {
                 </div>
                 <div className="flex flex-wrap sm:-m-4 -mx-4 -mb-10 -mt-4 md:space-y-0 space-y-6">
                     {products.map(({ id, data: { product, details, summary } }: { id: string, data: { product: string, details: string, summary: string } }) => (
-                        <ProductEntry
+                        <ProductEntry currentProduct={{ product: product, description: summary, path: id }}
                             key={id}
-                            title={product}
-                            description={summary}
-                            path={id} />
+                        />
                     ))}
                 </div>
             </div>
