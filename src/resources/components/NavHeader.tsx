@@ -1,7 +1,17 @@
 import React from 'react'
+import { useDispatch } from 'react-redux';
 import { Link } from 'react-router-dom'
+import { logout } from '../../features/userSlice';
+import { auth } from '../../firebaseConfig';
 
 function NavHeader() {
+    const dispatch = useDispatch()
+    const logoutOfApp = (e: any): void => {
+        e.preventDefault();
+        dispatch(logout());
+        auth.signOut();
+    }
+
     return (
         <div>
             <header className="text-gray-400 bg-gray-900 body-font">
@@ -16,7 +26,7 @@ function NavHeader() {
                         <Link to="/about" className="mr-5 hover:text-white">About Us</Link>
                         <Link to="/products" className="mr-5 hover:text-white">Our Products</Link>
                         <Link to="/bookdemo" className="mr-5 hover:text-white">Book a demo</Link>
-                        <Link to="/contact" className="mr-5 hover:text-white">Contact Us</Link>
+                        <a onClick={logoutOfApp} className="mr-5 hover:text-white">Contact Us</a>
                     </nav>
                 </div>
             </header>

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import './App.css';
 import Footer from './resources/components/Footer';
 import NavHeader from './resources/components/NavHeader';
@@ -11,13 +11,30 @@ import ProductDetails from './resources/pages/ProductDetails';
 import AboutUs from './resources/pages/AboutUs';
 import Register from './resources/pages/Register';
 import Login from './resources/pages/Login';
-import { useSelector } from 'react-redux';
-import { selectUser } from './features/userSlice';
+import { useDispatch, useSelector } from 'react-redux';
+import { login, logout, selectUser } from './features/userSlice';
 import NavHeaderAdmin from './resources/components/NavHeaderAdmin';
+import { auth } from './firebaseConfig';
 
 function App() {
   const user = useSelector(selectUser)
+  const dispatch = useDispatch();
 
+  useEffect(() => {
+    auth.onAuthStateChanged(userAuth => {
+      if (userAuth) {
+        //user is logged in
+        dispatch(login({
+          email: userAuth.email,
+          uid: userAuth.uid,
+          displayName: userAuth.displayName
+        }))
+      } else {
+        //user is logged out
+        dispatch(logout())
+      }
+    })
+  })
   return (
 
     <div className="app">

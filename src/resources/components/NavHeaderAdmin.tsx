@@ -17,6 +17,7 @@ function NavHeaderAdmin() {
                         <Link to="/products" className="mr-5 hover:text-white">Our Products</Link>
                         <Link to="/bookdemo" className="mr-5 hover:text-white">Book a demo</Link>
                         <Link to="/contact" className="mr-5 hover:text-white">Contact Us</Link>
+                        <Link to="/contact" className="mr-5 hover:text-white">Manage Products</Link>
                         <Link to="/contact" className="mr-5 hover:text-white">Logout</Link>
                     </nav>
                 </div>

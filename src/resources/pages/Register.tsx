@@ -28,8 +28,8 @@ function Register() {
                     console.log("Email:", authUser.user?.email)
                     dispatch((login({
                         email: authUser.user?.email,
-                        uid: authUser.user?.email,
-                        displayName: name
+                        uid: authUser.user?.uid,
+                        //  displayName: name
                     })))
 
                 }).catch(error => alert(error.message));
