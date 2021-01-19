@@ -26,7 +26,7 @@ function ProductInfo(currentItem: Product) {
                             <p className="text-base leading-relaxed xl:w-2/4 lg:w-3/4 mx-auto text-gray-400 text-opacity-80">{currentItem.summary}</p>
                         </div>
                         <div className="flex flex-col sm:flex-row mt-10">
-                            <div className="sm:w-1/3 text-center sm:pr-8 sm:py-8">
+                            <div className="sm:w-full text-center sm:pr-8 sm:py-8">
                                 <div className="flex flex-col items-center text-center justify-center">
                                     <h2 className="font-medium title-font mt-4 text-white text-lg">Benefits</h2>
                                     <div className="w-12 h-1 bg-indigo-500 rounded mt-2 mb-4"></div>
