@@ -53,7 +53,7 @@ function Register() {
                 </div>
                 <div className="relative mb-4">
                     <label htmlFor="password" className="leading-7 text-sm text-gray-600">Password</label>
-                    <input value={password} onChange={e => setPassword(e.target.value)} type="password" id="password" name="repassword" className="w-full bg-white rounded border border-gray-300 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out" />
+                    <input value={password} onChange={e => setPassword(e.target.value)} type="password" id="password" name="password" className="w-full bg-white rounded border border-gray-300 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out" />
                 </div>
                 <div className="relative mb-4">
                     <label htmlFor="repassword" className="leading-7 text-sm text-gray-600">Repeat Password</label>

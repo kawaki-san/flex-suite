@@ -1,4 +1,3 @@
-import { render } from '@testing-library/react'
 import React from 'react'
 import Benefit from './Benefit'
 import ProductDetailText from './ProductDetailText'
@@ -9,8 +8,9 @@ interface Product {
     benefit: Array<string>;
 }
 
-function ProductInfo({ currentItem }: { currentItem: Product }) {
+function ProductInfo(currentItem:Product) {
 
+    console.log("Selected Product: ", currentItem)
 
     return (
         <div>

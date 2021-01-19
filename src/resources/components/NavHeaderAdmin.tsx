@@ -1,7 +1,18 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
+import { logout } from '../../features/userSlice';
+import { auth } from '../../firebaseConfig';
+import { useDispatch } from 'react-redux';
 
 function NavHeaderAdmin() {
+
+    const dispatch = useDispatch()
+    const logoutOfApp = (e: any): void => {
+        e.preventDefault();
+        dispatch(logout());
+        auth.signOut();
+    }
+
     return (
         <div>
             <header className="text-gray-400 bg-gray-900 body-font">
@@ -17,8 +28,8 @@ function NavHeaderAdmin() {
                         <Link to="/products" className="mr-5 hover:text-white">Our Products</Link>
                         <Link to="/bookdemo" className="mr-5 hover:text-white">Book a demo</Link>
                         <Link to="/contact" className="mr-5 hover:text-white">Contact Us</Link>
-                        <Link to="/contact" className="mr-5 hover:text-white">Manage Products</Link>
-                        <Link to="/contact" className="mr-5 hover:text-white">Logout</Link>
+                        <Link to="/admin/manage" className="mr-5 hover:text-white">Manage Products</Link>
+                        <button onClick={logoutOfApp} className="mr-5 hover:text-white">Logout</button>
                     </nav>
                 </div>
             </header>

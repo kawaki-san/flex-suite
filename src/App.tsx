@@ -15,6 +15,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { login, logout, selectUser } from './features/userSlice';
 import NavHeaderAdmin from './resources/components/NavHeaderAdmin';
 import { auth } from './firebaseConfig';
+import Manage from './resources/pages/Manage';
 
 function App() {
   const user = useSelector(selectUser)
@@ -52,6 +53,7 @@ function App() {
         <Route path='/about' component={AboutUs} />
         <Route path='/admin/register' component={Register} />
         <Route path='/admin/login' component={Login} />
+        <Route path='/admin/manage' component={Manage} />
       </Switch>
 
       <Footer />
