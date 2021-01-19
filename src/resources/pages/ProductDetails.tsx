@@ -20,6 +20,7 @@ function ProductDetails({ match }: RouteComponentProps<TParams>) {
             } catch (err) {
                 console.error(err);
             }
+            window.scrollTo(0, 0);
         };
         fetchData();
     }, []);
@@ -29,7 +30,7 @@ function ProductDetails({ match }: RouteComponentProps<TParams>) {
     return (
         <div>
             {
-            <ProductInfo{... product}/>}
+                <ProductInfo{...product} />}
         </div>
     )
 }
