@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import Benefit from './Benefit'
 import ProductDetailText from './ProductDetailText'
 interface Product {
@@ -8,9 +8,11 @@ interface Product {
     benefit: Array<string>;
 }
 
-function ProductInfo(currentItem:Product) {
+function ProductInfo(currentItem: Product) {
+    var benefits = currentItem.benefit;
+    //  console.log("Benefits: ", benefits)
 
-    console.log("Selected Product: ", currentItem)
+
 
     return (
         <div>
@@ -28,11 +30,11 @@ function ProductInfo(currentItem:Product) {
                                 <div className="flex flex-col items-center text-center justify-center">
                                     <h2 className="font-medium title-font mt-4 text-white text-lg">Benefits</h2>
                                     <div className="w-12 h-1 bg-indigo-500 rounded mt-2 mb-4"></div>
-
                                     <nav className="flex flex-col sm:items-start sm:text-left text-center items-center -mb-1 space-y-2">
-                                        {currentItem.benefit.map(({ item }: any) => {
-                                            return <Benefit title={item} />
-                                        })}
+                                        {benefits ? benefits.map((item: string) => {
+                                            console.log(item)
+                                            return <Benefit key={benefits.indexOf(item)} item={item} />
+                                        }) : <div>Loading Data</div>}
                                     </nav>
                                 </div>
                             </div>

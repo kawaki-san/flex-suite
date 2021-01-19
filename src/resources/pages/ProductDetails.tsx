@@ -23,7 +23,7 @@ function ProductDetails({ match }: RouteComponentProps<TParams>) {
         };
         fetchData();
     }, []);
-    console.log("Reading is: ", product)
+    //console.log("Reading is: ", product)
 
 
     return (
