@@ -31,6 +31,7 @@ function EditProductModal({ modalIsOpen, setModalIsOpen, currentProduct }: { mod
         e.preventDefault();
         setModalIsOpen(false)
     }
+
     console.log("My Product is:", currentProduct.path)
 
 
@@ -38,11 +39,20 @@ function EditProductModal({ modalIsOpen, setModalIsOpen, currentProduct }: { mod
     const [description, setDescription] = useState("")
     const [summary, setSummary] = useState("")
 
+    const updateDocument = async (e: any) => {
+        e.preventDefault();
+        db.collection("Products").doc(currentProduct.path).update({
+            summary: summary,
+            description: description,
+        }).then(function () {
+            console.log("Document successfully updated!");
+        })
+    }
+
 
     if (product == null) {
         return <div>Loading Data</div>
     } else
-
         return (
             <div>
                 <Modal isOpen={modalIsOpen}>
@@ -84,7 +94,7 @@ function EditProductModal({ modalIsOpen, setModalIsOpen, currentProduct }: { mod
                                     </div>
 
                                     <div className="p-2 w-full">
-                                        <button className="flex mx-auto text-white bg-blue-500 border-0 py-2 px-8 focus:outline-none hover:bg-blue-600 rounded text-lg">Save Changes</button>
+                                        <button className="flex mx-auto text-white bg-blue-500 border-0 py-2 px-8 focus:outline-none hover:bg-blue-600 rounded text-lg" onClick={updateDocument} >Save Changes</button>
                                     </div>
 
                                 </div>
