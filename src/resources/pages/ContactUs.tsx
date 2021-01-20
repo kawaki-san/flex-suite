@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import "./../../css/map.css"
 import emailjs from 'emailjs-com'
 
-function ContatUs() {
+function ContactUs() {
     const [email, setEmail] = useState("")
     const [name, setName] = useState("")
     const [message, setMessage] = useState("")
@@ -66,4 +66,4 @@ function ContatUs() {
     )
 }
 
-export default ContatUs
+export default ContactUs

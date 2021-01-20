@@ -3,7 +3,7 @@ import './App.css';
 import Footer from './resources/components/Footer';
 import NavHeader from './resources/components/NavHeader';
 import Home from './resources/pages/Home';
-import ContactUs from './resources/pages/ContatUs';
+import ContactUs from './resources/pages/ContactUs';
 import Products from './resources/pages/Products';
 import { Switch, Route } from 'react-router-dom'
 import BookDemo from './resources/pages/BookDemo';
