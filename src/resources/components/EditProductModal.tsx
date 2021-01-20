@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from 'react'
 import Modal from 'react-modal'
 import { db } from '../../firebaseConfig';
+import { useToasts } from 'react-toast-notifications'
+
 
 interface iProduct {
     product: string;
@@ -11,6 +13,7 @@ interface iProduct {
 
 function EditProductModal({ modalIsOpen, setModalIsOpen, currentProduct }: { modalIsOpen: boolean, setModalIsOpen: any, currentProduct: iProduct }) {
     const [product, setProduct]: any = useState();
+    const { addToast } = useToasts()
     useEffect(() => {
         const fetchData = async () => {
             try {
@@ -33,20 +36,63 @@ function EditProductModal({ modalIsOpen, setModalIsOpen, currentProduct }: { mod
     }
 
     console.log("My Product is:", currentProduct.path)
+    const successMessage: string = "Product successfully updated!, Reload your webpage";
 
-
-    const [benefits, setBenefits] = useState([])
-    const [description, setDescription] = useState("")
+    const [benefits, setBenefits] = useState("")
+    const [details, setDetails] = useState("")
     const [summary, setSummary] = useState("")
 
     const updateDocument = async (e: any) => {
         e.preventDefault();
-        db.collection("Products").doc(currentProduct.path).update({
-            summary: summary,
-            description: description,
-        }).then(function () {
-            console.log("Document successfully updated!");
-        })
+        if (summary === "" && details === "" && benefits === "") {
+            addToast('No changes to update', { appearance: 'info' })
+        } else if (summary === "" && details === "") {
+            db.collection("Products").doc(currentProduct.path).update({
+                benefit: benefits.split("\n")
+            }).then(function () {
+                addToast(successMessage, { appearance: 'success' })
+            })
+        } else if (details === "" && benefits === "") {
+            db.collection("Products").doc(currentProduct.path).update({
+                summary: summary,
+            }).then(function () {
+                addToast(successMessage, { appearance: 'success' })
+            })
+        } else if (summary === "" && benefits === "") {
+            db.collection("Products").doc(currentProduct.path).update({
+                details: details,
+            }).then(function () {
+                addToast(successMessage, { appearance: 'success' })
+            })
+        } else if (summary === "") {
+            db.collection("Products").doc(currentProduct.path).update({
+                details: details,
+                benefit: benefits.split("\n")
+            }).then(function () {
+                addToast(successMessage, { appearance: 'success' })
+            })
+        } else if (details === "") {
+            db.collection("Products").doc(currentProduct.path).update({
+                summary: summary,
+                benefit: benefits.split("\n")
+            }).then(function () {
+                addToast(successMessage, { appearance: 'success' })
+            })
+        } else if (benefits === "") {
+            db.collection("Products").doc(currentProduct.path).update({
+                summary: summary,
+                details: details
+            }).then(function () {
+                addToast(successMessage, { appearance: 'success' })
+            })
+        } else
+            db.collection("Products").doc(currentProduct.path).update({
+                summary: summary,
+                details: details,
+                benefit: benefits.split("\n")
+            }).then(function () {
+                addToast(successMessage, { appearance: 'success' })
+            })
     }
 
 
@@ -82,14 +128,14 @@ function EditProductModal({ modalIsOpen, setModalIsOpen, currentProduct }: { mod
                                     <div className="p-2 w-full">
                                         <div className="relative">
                                             <label htmlFor="details" className="leading-7 text-sm text-gray-600">Product Details</label>
-                                            <textarea id="details" name="details" defaultValue={product.details} onChange={e => setDescription(e.target.value)} className="w-full bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:border-blue-500 focus:bg-white focus:ring-2 focus:ring-blue-200 h-32 text-base outline-none text-gray-700 py-1 px-3 resize-none leading-6 transition-colors duration-200 ease-in-out"></textarea>
+                                            <textarea id="details" name="details" defaultValue={product.details} onChange={e => setDetails(e.target.value)} className="w-full bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:border-blue-500 focus:bg-white focus:ring-2 focus:ring-blue-200 h-32 text-base outline-none text-gray-700 py-1 px-3 resize-none leading-6 transition-colors duration-200 ease-in-out"></textarea>
                                         </div>
                                     </div>
 
                                     <div className="p-2 w-full">
                                         <div className="relative">
                                             <label htmlFor="benefits" className="leading-7 text-sm text-gray-600">Product Benefits (Put each benefit on its own line)</label>
-                                            <textarea id="benefits" name="benefits" defaultValue={product.benefit.join("\n")} className="w-full bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:border-blue-500 focus:bg-white focus:ring-2 focus:ring-blue-200 h-32 text-base outline-none text-gray-700 py-1 px-3 resize-none leading-6 transition-colors duration-200 ease-in-out"></textarea>
+                                            <textarea id="benefits" name="benefits" defaultValue={product.benefit.join("\n")} onChange={e => setBenefits(e.target.value)} className="w-full bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:border-blue-500 focus:bg-white focus:ring-2 focus:ring-blue-200 h-32 text-base outline-none text-gray-700 py-1 px-3 resize-none leading-6 transition-colors duration-200 ease-in-out"></textarea>
                                         </div>
                                     </div>
 
