@@ -2,9 +2,10 @@ import React, { useState, useEffect } from 'react'
 import { db } from '../../firebaseConfig'
 import EditProduct from '../components/EditProduct'
 import AddIcon from '@material-ui/icons/Add';
+import AddProductModal from '../components/AddProductModal';
 
 function Manage() {
-
+    const [modalIsOpen, setModalIsOpen] = useState(false)
     const [products, setProducts]: any = useState([])
     useEffect(() => {
         db.collection("Products").onSnapshot((snapshot) =>
@@ -17,6 +18,11 @@ function Manage() {
         );
     }, [])
 
+    const showAddDialog = (e: any): void => {
+        e.preventDefault();
+        setModalIsOpen(true)
+    }
+
 
     return (
         <section className="text-gray-400 bg-gray-900 body-font">
@@ -24,7 +30,7 @@ function Manage() {
                 <div className="text-center mb-20">
                     <h1 className="sm:text-3xl text-2xl font-medium title-font text-white mb-4">Product Management</h1>
                     <p className="text-base leading-relaxed xl:w-2/4 lg:w-3/4 mx-auto text-gray-400 text-opacity-80">Add, edit or delete your products from here</p>
-                    <button className="inline-flex text-white bg-blue-500 border-0 py-1 px-4 focus:outline-none hover:bg-blue-600 rounded">
+                    <button onClick={showAddDialog} className="inline-flex text-white bg-blue-500 border-0 py-1 px-4 focus:outline-none hover:bg-blue-600 rounded">
                         <AddIcon />
                         <span>Add New</span>
                     </button>
@@ -40,6 +46,7 @@ function Manage() {
                     ))}
                 </div>
             </div>
+            <AddProductModal modalIsOpen={modalIsOpen} setModalIsOpen={setModalIsOpen} />
         </section>
     )
 }
