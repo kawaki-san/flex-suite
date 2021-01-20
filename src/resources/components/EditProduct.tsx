@@ -1,5 +1,6 @@
-import React from 'react'
+import React, { useState } from 'react'
 import CreateIcon from '@material-ui/icons/Create';
+import EditProductModal from './EditProductModal';
 
 interface iProduct {
     product: string;
@@ -10,6 +11,16 @@ interface iProduct {
 
 
 function EditProduct({ currentProduct }: { currentProduct: iProduct }) {
+    const [modalIsOpen, setModalIsOpen] = useState(false)
+
+    console.log("Benefits: ", currentProduct)
+
+    const showEditProductModal = (e: any): void => {
+        e.preventDefault();
+        setModalIsOpen(true);
+
+    }
+
     return (
         <div className="p-4 md:w-1/3 flex flex-col text-center items-center">
             <div className="w-20 h-20 inline-flex items-center justify-center rounded-full bg-gray-800 text-blue-400 mb-5 flex-shrink-0">
@@ -21,13 +32,15 @@ function EditProduct({ currentProduct }: { currentProduct: iProduct }) {
                 <h2 className="text-white text-lg title-font font-medium mb-3">{currentProduct.product}</h2>
                 <p className="leading-relaxed text-base">{currentProduct.description}</p>
                 <div className=" md:mt-4 mt-6 inline-flex items-center">
-                  
-                        <button className="inline-flex text-white bg-blue-500 border-0 py-1 px-4 focus:outline-none hover:bg-blue-600 rounded"> <CreateIcon/>  Edit Product</button>
-        
+
+                    <button onClick={showEditProductModal} className="inline-flex text-white bg-blue-500 border-0 py-1 px-4 focus:outline-none hover:bg-blue-600 rounded"> <CreateIcon />  Edit Product</button>
+
                 </div>
 
 
             </div>
+
+            <EditProductModal modalIsOpen={modalIsOpen} setModalIsOpen={setModalIsOpen} currentProduct={currentProduct} />
         </div>
     )
 }
