@@ -2,6 +2,9 @@ import React, { useEffect, useState } from 'react'
 import Modal from 'react-modal'
 import { db } from '../../firebaseConfig';
 import { useToasts } from 'react-toast-notifications'
+import DeleteIcon from '@material-ui/icons/Delete';
+import SaveIcon from '@material-ui/icons/Save';
+import DeleteModal from './DeleteModal';
 
 
 interface iProduct {
@@ -13,6 +16,7 @@ interface iProduct {
 
 function EditProductModal({ modalIsOpen, setModalIsOpen, currentProduct }: { modalIsOpen: boolean, setModalIsOpen: any, currentProduct: iProduct }) {
     const [product, setProduct]: any = useState();
+    const [deleteModalIsOpen, setDeleteModalIsOpen] = useState(false)
     const { addToast } = useToasts()
     useEffect(() => {
         const fetchData = async () => {
@@ -42,6 +46,11 @@ function EditProductModal({ modalIsOpen, setModalIsOpen, currentProduct }: { mod
     const [details, setDetails] = useState("")
     const [summary, setSummary] = useState("")
 
+    const deleteDocument = async (e: any) => {
+        e.preventDefault();
+        setDeleteModalIsOpen(true);
+
+    }
     const updateDocument = async (e: any) => {
         e.preventDefault();
         if (summary === "" && details === "" && benefits === "") {
@@ -139,8 +148,9 @@ function EditProductModal({ modalIsOpen, setModalIsOpen, currentProduct }: { mod
                                         </div>
                                     </div>
 
-                                    <div className="p-2 w-full">
-                                        <button className="flex mx-auto text-white bg-blue-500 border-0 py-2 px-8 focus:outline-none hover:bg-blue-600 rounded text-lg" onClick={updateDocument} >Save Changes</button>
+                                    <div className="p-2 w-full inline-flex items-center">
+                                        <button className="flex mx-auto text-white bg-blue-500 border-0 py-2 px-8 focus:outline-none hover:bg-blue-600 rounded text-lg" onClick={updateDocument} > <SaveIcon /> Save Changes</button>
+                                        <button className="flex mx-auto text-white bg-red-500 border-0 py-2 px-8 focus:outline-none hover:bg-yellow-600 rounded text-lg" onClick={deleteDocument} > <DeleteIcon /> Delete Product</button>
                                     </div>
 
                                 </div>
@@ -149,6 +159,7 @@ function EditProductModal({ modalIsOpen, setModalIsOpen, currentProduct }: { mod
                     </section>
                     <button onClick={closeModal} className="inline-flex text-white bg-red-500 border-0 py-1 px-4 focus:outline-none hover:bg-blue-600 rounded">   Close Dialog</button>
                 </Modal>
+                <DeleteModal modalIsOpen={deleteModalIsOpen} setModalIsOpen={setDeleteModalIsOpen} currentProduct={currentProduct} />
             </div>
         )
 }
