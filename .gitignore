@@ -23,3 +23,4 @@ yarn-debug.log*
 yarn-error.log*
 /src/firebaseConfig.ts
 src/resources/pages/Sample.txt
+src/resources/pages/ContactUs copy.tsx
