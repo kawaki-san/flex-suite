@@ -1,11 +1,13 @@
 import React, { useState } from 'react'
 import "./../../css/map.css"
 import emailjs from 'emailjs-com'
+import { useToasts } from 'react-toast-notifications'
 
 function ContactUs() {
     const [email, setEmail] = useState("")
     const [name, setName] = useState("")
     const [message, setMessage] = useState("")
+    const { addToast } = useToasts()
 
 
     const sendEmail = async (e: React.SyntheticEvent<EventTarget>) => {
@@ -17,9 +19,9 @@ function ContactUs() {
         e.preventDefault();
         emailjs.send('service_agyidqo', 'template_hcq1axf', templateParams, 'user_4pxbqRR0umxRjmcz8T0Nc')
             .then(function (response) {
-                console.log('SUCCESS!', response.status, response.text);
+                addToast("Your email has been sent successfully", { appearance: 'success' });
             }, function (error) {
-                console.log('FAILED...', error);
+                addToast(error, { appearance: 'error' });
             });
 
     }
