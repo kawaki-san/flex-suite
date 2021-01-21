@@ -60,7 +60,7 @@ function Footer() {
                         <h2 className="title-font font-medium text-white tracking-widest text-sm mb-3">CONTACTS</h2>
                         <nav className="list-none mb-10">
                             <li>
-                                <a href='frontdesk@cits.co.tz' className="text-gray-400 hover:text-white">frontdesk@cits.co.tz</a>
+                                <a href='mailto:frontdesk@cits.co.tz' className="text-gray-400 hover:text-white">frontdesk@cits.co.tz</a>
                                 <span> </span>
                                 <MailOutlineOutlinedIcon />
                             </li>

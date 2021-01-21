@@ -12,17 +12,21 @@ function BookDemo() {
     const [endDate, setEndDate]: any = useState(new Date());
     const [products, setProducts]: any = useState([])
     let productsList: Array<string> = [];
+
     useEffect(() => {
-        db.collection("Products").onSnapshot((snapshot) =>
-            setProducts(
-                snapshot.docs.map((doc) => ({
-                    id: doc.id,
-                    data: doc.data(),
-                }))
-            )
-        );
+        db.collection("Products").get().then(function(querySnapshot) {
+            querySnapshot.forEach(function(doc) {
+                // doc.data() is never undefined for query doc snapshots
+             //   console.log(doc.id, " => ", doc.data().product);
+               productsList.indexOf(doc.data().product) === -1 ? productsList.push(doc.data().product) : console.log("This item already exists");
+               setProducts(productsList)
+            });
+        });
     }, [])
-    console.log(products.product)
+
+
+      
+        console.log(productsList)
 
     return (
         <div>
@@ -41,12 +45,11 @@ function BookDemo() {
                             <DatePicker selected={endDate} onChange={date => setEndDate(date)} className="w-full bg-white rounded border border-gray-300 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out" />
                         </div>
                         <div className="relative mb-4">
-                            <p className="leading-7 text-sm text-gray-600">Select your Product</p>
+                            <p className="leading-7 text-sm text-gray-600">Select your Product</p>   
+                                        
                             <DropdownList
                                 data={products}
-                                defaultValue={"orange"}
-                                disabled={["red", "purple"]}
-                            />
+                           />
                         </div>
                         <div className="relative mb-4">
                             <label htmlFor="first_name" className="leading-7 text-sm text-gray-600">First Name</label>
