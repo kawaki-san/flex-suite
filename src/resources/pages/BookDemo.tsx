@@ -8,7 +8,8 @@ import { useToasts } from 'react-toast-notifications'
 
 interface comboBoxEntries {
     label: string,
-    value: string
+    value: string,
+    type?: string
 }
 
 function BookDemo() {
@@ -22,11 +23,7 @@ function BookDemo() {
     const [questions, setQuestions] = useState("")
     const [first_name, setFirstName] = useState("")
     const [product_name, setProductName] = useState("")
-    const [datas, setDatas] = useState([
-        { value: 'chocolate', label: 'Chocolate' },
-        { value: 'strawberry', label: 'Strawberry' },
-        { value: 'vanilla', label: 'Vanilla' }
-    ]);
+    const [datas, setDatas] = useState([{}]);
     const { addToast } = useToasts()
     useEffect(() => {
         db.collection("Products").get().then(function (querySnapshot) {
@@ -34,19 +31,17 @@ function BookDemo() {
                 // doc.data() is never undefined for query doc snapshots
                 //  console.log(doc.data().product);
                 const name = doc.data().product;
-
                 const entry = {
                     value: name,
                     label: name
                 }
                 datas.push(entry)
-
             });
         });
     }, [])
 
 
-    console.log(datas)
+    //console.log(datas)
 
     const sendEmail = async (e: React.SyntheticEvent<EventTarget>) => {
         var templateParams = {
@@ -59,7 +54,7 @@ function BookDemo() {
             questions: questions,
             date_from: startDate,
             date_to: endDate,
-            product_name: "Testing"
+            product_name: product_name
         };
         e.preventDefault();
         emailjs.send('service_agyidqo', 'template_p7zgu7k', templateParams, 'user_4pxbqRR0umxRjmcz8T0Nc')
@@ -69,6 +64,11 @@ function BookDemo() {
                 addToast(error, { appearance: 'error' });
             });
     }
+
+    const selectProduct = (newValue: any) => {
+        const selected = newValue.value;
+        setProductName(selected)
+    };
 
     return (
         <div>
@@ -88,7 +88,14 @@ function BookDemo() {
                         </div>
                         <div className="relative mb-4">
                             <p className="leading-7 text-sm text-gray-600">Select your Product</p>
-                            <Select options={datas} />
+                            <Select options={datas} onChange={selectedOption /* type is automatically inferred here */ => {
+                                if (Array.isArray(selectedOption)) {
+                                    throw new Error("Unexpected type passed to ReactSelect onChange handler");
+                                }
+                                if (selectedOption) {
+                                    selectProduct(selectedOption)
+                                }
+                            }} />
                         </div>
                         <div className="relative mb-4">
                             <label htmlFor="first_name" className="leading-7 text-sm text-gray-600">First Name</label>

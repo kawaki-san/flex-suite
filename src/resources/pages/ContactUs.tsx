@@ -23,7 +23,6 @@ function ContactUs() {
             }, function (error) {
                 addToast(error, { appearance: 'error' });
             });
-
     }
 
 
