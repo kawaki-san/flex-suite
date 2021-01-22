@@ -1,16 +1,20 @@
 import React, { useEffect, useState } from "react";
 import DatePicker from "react-datepicker";
-import DropdownList from 'react-widgets/lib/DropdownList'
+import Select from 'react-select'
 import "react-datepicker/dist/react-datepicker.css";
-import 'react-widgets/dist/css/react-widgets.css';
 import { db } from "../../firebaseConfig";
 import emailjs from 'emailjs-com'
 import { useToasts } from 'react-toast-notifications'
 
+interface comboBoxEntries {
+    label: string,
+    value: string
+}
+
 function BookDemo() {
     const [startDate, setStartDate]: any = useState(new Date());
     const [endDate, setEndDate]: any = useState(new Date());
-    const [products, setProducts]: any = useState([])
+    // const [products, setProducts]: any = useState<Array<string>>()
     const [email, setEmail] = useState("")
     const [last_name, setLastName] = useState("")
     const [phone_number, setPhoneNumber] = useState("")
@@ -18,48 +22,54 @@ function BookDemo() {
     const [questions, setQuestions] = useState("")
     const [first_name, setFirstName] = useState("")
     const [product_name, setProductName] = useState("")
-    let productsList: Array<string> = [];
+    const [datas, setDatas] = useState([
+        { value: 'chocolate', label: 'Chocolate' },
+        { value: 'strawberry', label: 'Strawberry' },
+        { value: 'vanilla', label: 'Vanilla' }
+    ]);
     const { addToast } = useToasts()
-
-    
-
     useEffect(() => {
-        db.collection("Products").get().then(function(querySnapshot) {
-            querySnapshot.forEach(function(doc) {
+        db.collection("Products").get().then(function (querySnapshot) {
+            querySnapshot.forEach(function (doc) {
                 // doc.data() is never undefined for query doc snapshots
-             //   console.log(doc.id, " => ", doc.data().product);
-               productsList.indexOf(doc.data().product) === -1 ? productsList.push(doc.data().product) : console.log("This item already exists");
-               setProducts(productsList)
+                //  console.log(doc.data().product);
+                const name = doc.data().product;
+
+                const entry = {
+                    value: name,
+                    label: name
+                }
+                datas.push(entry)
+
             });
         });
     }, [])
 
 
-      
-        console.log(productsList)
+    console.log(datas)
 
-        const sendEmail = async (e: React.SyntheticEvent<EventTarget>) => {
-            var templateParams = {
-                first_name: first_name,
-                email: email,
-                prod: product_name,
-                last_name: last_name,
-                phone_number: phone_number,
-                address: address,
-                questions: questions,
-                date_from: startDate,
-                date_to: endDate,
-            };
-            e.preventDefault();
-            emailjs.send('service_agyidqo', 'template_p7zgu7k', templateParams, 'user_4pxbqRR0umxRjmcz8T0Nc')
-                .then(function (response) {
-                    addToast("Your email has been sent successfully", { appearance: 'success' });
-                }, function (error) {
-                    addToast(error, { appearance: 'error' });
-                });
-    
-        }
-  
+    const sendEmail = async (e: React.SyntheticEvent<EventTarget>) => {
+        var templateParams = {
+            first_name: first_name,
+            email: email,
+            prod: product_name,
+            last_name: last_name,
+            phone_number: phone_number,
+            address: address,
+            questions: questions,
+            date_from: startDate,
+            date_to: endDate,
+            product_name: "Testing"
+        };
+        e.preventDefault();
+        emailjs.send('service_agyidqo', 'template_p7zgu7k', templateParams, 'user_4pxbqRR0umxRjmcz8T0Nc')
+            .then(function (response) {
+                addToast("Your email has been sent successfully", { appearance: 'success' });
+            }, function (error) {
+                addToast(error, { appearance: 'error' });
+            });
+    }
+
     return (
         <div>
 
@@ -70,23 +80,19 @@ function BookDemo() {
                     <div className="lg:w-1/3 md:w-1/2 rounded-lg overflow-hidden sm:mr-10 p-10 flex justify-start relative">
                         <h1 className="title-font sm:text-4xl text-3xl mb-4 font-medium text-black">Flex Software Suite</h1>
                     </div>
-                    <form  onSubmit={sendEmail} className="lg:w-2/3 md:w-1/2 bg-white flex flex-col md:ml-auto w-full md:py-8 mt-8 md:mt-0">
+                    <form onSubmit={sendEmail} className="lg:w-2/3 md:w-1/2 bg-white flex flex-col md:ml-auto w-full md:py-8 mt-8 md:mt-0">
                         <div className="relative mb-4">
                             <p className="leading-7 text-sm text-gray-600">Select your start (left) and end dates (right)</p>
                             <DatePicker selected={startDate} onChange={date => setStartDate(date)} className="w-full bg-white rounded border border-gray-300 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out" />
                             <DatePicker selected={endDate} onChange={date => setEndDate(date)} className="w-full bg-white rounded border border-gray-300 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out" />
                         </div>
                         <div className="relative mb-4">
-                            <p className="leading-7 text-sm text-gray-600">Select your Product</p>   
-                                        
-                            <DropdownList
-                                data={products}
-                             
-                           />
+                            <p className="leading-7 text-sm text-gray-600">Select your Product</p>
+                            <Select options={datas} />
                         </div>
                         <div className="relative mb-4">
                             <label htmlFor="first_name" className="leading-7 text-sm text-gray-600">First Name</label>
-                            <input type="text" id="first_name" name="first_name"  onChange={e => setFirstName(e.target.value)} className="w-full bg-white rounded border border-gray-300 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out" />
+                            <input type="text" id="first_name" name="first_name" onChange={e => setFirstName(e.target.value)} className="w-full bg-white rounded border border-gray-300 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out" />
                         </div>
                         <div className="relative mb-4">
                             <label htmlFor="last_name" className="leading-7 text-sm text-gray-600">Last Name</label>
