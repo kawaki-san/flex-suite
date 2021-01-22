@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import Modal from 'react-modal'
-import { db } from '../../firebaseConfig';
+import { db, storage } from '../../firebaseConfig';
 import { useToasts } from 'react-toast-notifications'
 import DeleteIcon from '@material-ui/icons/Delete';
 import SaveIcon from '@material-ui/icons/Save';
@@ -17,6 +17,7 @@ interface iProduct {
 function EditProductModal({ modalIsOpen, setModalIsOpen, currentProduct }: { modalIsOpen: boolean, setModalIsOpen: any, currentProduct: iProduct }) {
     const [product, setProduct]: any = useState();
     const [deleteModalIsOpen, setDeleteModalIsOpen] = useState(false)
+    const [files, setFiles] = useState<File | null>()
     const { addToast } = useToasts()
     useEffect(() => {
         const fetchData = async () => {
@@ -45,6 +46,10 @@ function EditProductModal({ modalIsOpen, setModalIsOpen, currentProduct }: { mod
     const [benefits, setBenefits] = useState("")
     const [details, setDetails] = useState("")
     const [summary, setSummary] = useState("")
+    const onFileChange = (e: any) => {
+        setFiles(e.target.files[0]);
+    }
+
 
     const deleteDocument = async (e: any) => {
         e.preventDefault();
@@ -53,55 +58,373 @@ function EditProductModal({ modalIsOpen, setModalIsOpen, currentProduct }: { mod
     }
     const updateDocument = async (e: any) => {
         e.preventDefault();
-        if (summary === "" && details === "" && benefits === "") {
+        if (summary === "" && details === "" && benefits === "" && files === null) {
             addToast('No changes to update', { appearance: 'info' })
-        } else if (summary === "" && details === "") {
-            db.collection("Products").doc(currentProduct.path).update({
-                benefit: benefits.split("\n")
-            }).then(function () {
-                addToast(successMessage, { appearance: 'success' })
-            })
-        } else if (details === "" && benefits === "") {
-            db.collection("Products").doc(currentProduct.path).update({
-                summary: summary,
-            }).then(function () {
-                addToast(successMessage, { appearance: 'success' })
-            })
-        } else if (summary === "" && benefits === "") {
-            db.collection("Products").doc(currentProduct.path).update({
-                details: details,
-            }).then(function () {
-                addToast(successMessage, { appearance: 'success' })
-            })
-        } else if (summary === "") {
-            db.collection("Products").doc(currentProduct.path).update({
-                details: details,
-                benefit: benefits.split("\n")
-            }).then(function () {
-                addToast(successMessage, { appearance: 'success' })
-            })
-        } else if (details === "") {
-            db.collection("Products").doc(currentProduct.path).update({
-                summary: summary,
-                benefit: benefits.split("\n")
-            }).then(function () {
-                addToast(successMessage, { appearance: 'success' })
-            })
-        } else if (benefits === "") {
-            db.collection("Products").doc(currentProduct.path).update({
-                summary: summary,
-                details: details
-            }).then(function () {
-                addToast(successMessage, { appearance: 'success' })
-            })
-        } else
-            db.collection("Products").doc(currentProduct.path).update({
-                summary: summary,
-                details: details,
-                benefit: benefits.split("\n")
-            }).then(function () {
-                addToast(successMessage, { appearance: 'success' })
-            })
+        } else if (files && summary === "" && details === "" && benefits === "") {//just changing the banner    
+            const filePath = `banners/${new Date().getTime()}-${files.name}`;
+            const storageRef = storage.ref(filePath);
+            const uploadTask = storageRef.put(files);
+            uploadTask.on('state_changed', (snapshot) => {
+                const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+                addToast("Uploading Image " + progress + "%", { appearance: 'info' });
+            }, (error) => {
+                console.log(error);
+            }, () => {
+                uploadTask.snapshot.ref.getDownloadURL().then(async (downloadUrl) => {
+                    try {
+                        addToast("Uploaded Image", { appearance: 'success' })
+                        const fileLocation = uploadTask.snapshot.ref.fullPath;
+                        // Create a reference to the file to delete
+                        var desertRef = storageRef.child(product.bannerPath);
+                        db.collection("Products").doc(currentProduct.path).update({
+                            banner: downloadUrl,
+                            bannerPath: fileLocation
+                        }).then(function () {
+                            addToast("Updated Image", { appearance: 'success' })
+                            // Delete the file
+                            desertRef.delete().then(function () {
+                                // File deleted successfully
+                                addToast("Deleted Image", { appearance: 'success' })
+
+                            }).catch(function (error) {
+                                window.location.reload();
+                                addToast(error, { appearance: 'error' })
+                            });
+                        })
+                    } catch (err) {
+                        console.log(err);
+                    }
+                }).catch(err => console.log(err));
+            });
+        }
+        else if (summary === "" && details === "" && benefits !== "") { //changing the banner and benefits
+            if (files) {
+                const filePath = `banners/${new Date().getTime()}-${files.name}`;
+                const storageRef = storage.ref(filePath);
+                const uploadTask = storageRef.put(files);
+                uploadTask.on('state_changed', (snapshot) => {
+                    const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+                    addToast("Uploading Image " + progress + "%", { appearance: 'info' });
+                }, (error) => {
+                    console.log(error);
+                }, () => {
+                    uploadTask.snapshot.ref.getDownloadURL().then(async (downloadUrl) => {
+                        try {
+                            addToast("Uploaded Image", { appearance: 'success' })
+                            const fileLocation = uploadTask.snapshot.ref.fullPath;
+                            // Create a reference to the file to delete
+                            var desertRef = storageRef.child(product.bannerPath);
+                            db.collection("Products").doc(currentProduct.path).update({
+                                benefit: benefits.split("\n"),
+                                banner: downloadUrl,
+                                bannerPath: fileLocation
+                            }).then(function () {
+                                addToast("Updated Image", { appearance: 'success' })
+                                // Delete the file
+                                desertRef.delete().then(function () {
+                                    // File deleted successfully
+                                    addToast("Deleted Image", { appearance: 'success' })
+
+                                }).catch(function (error) {
+                                    window.location.reload();
+                                    addToast(error, { appearance: 'error' })
+                                });
+                            })
+                        } catch (err) {
+                            console.log(err);
+                        }
+                    }).catch(err => console.log(err));
+                });
+            } else { //just changing benefits
+                db.collection("Products").doc(currentProduct.path).update({
+                    benefit: benefits.split("\n"),
+                }).then(function () {
+                    addToast(successMessage, { appearance: 'success' })
+                    // Delete the file
+                })
+            }
+        } else if (details === "" && benefits === "") { //changing summary and banner
+            if (files) {
+                const filePath = `banners/${new Date().getTime()}-${files.name}`;
+                const storageRef = storage.ref(filePath);
+                const uploadTask = storageRef.put(files);
+                uploadTask.on('state_changed', (snapshot) => {
+                    const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+                    addToast("Uploading Image " + progress + "%", { appearance: 'info' });
+                }, (error) => {
+                    console.log(error);
+                }, () => {
+                    uploadTask.snapshot.ref.getDownloadURL().then(async (downloadUrl) => {
+                        try {
+                            addToast("Uploaded Image", { appearance: 'success' })
+                            const fileLocation = uploadTask.snapshot.ref.fullPath;
+                            // Create a reference to the file to delete
+                            var desertRef = storageRef.child(product.bannerPath);
+                            db.collection("Products").doc(currentProduct.path).update({
+                                summary: summary,
+                                banner: downloadUrl,
+                                bannerPath: fileLocation
+                            }).then(function () {
+                                addToast("Updated Image", { appearance: 'success' })
+                                // Delete the file
+                                desertRef.delete().then(function () {
+                                    // File deleted successfully
+                                    addToast("Deleted Image", { appearance: 'success' })
+
+                                }).catch(function (error) {
+                                    window.location.reload();
+                                    addToast(error, { appearance: 'error' })
+                                });
+                            })
+                        } catch (err) {
+                            console.log(err);
+                        }
+                    }).catch(err => console.log(err));
+                });
+            } else { //changing summary
+                db.collection("Products").doc(currentProduct.path).update({
+                    summary: summary,
+                }).then(function () {
+                    addToast(successMessage, { appearance: 'success' })
+                })
+            }
+        } else if (summary === "" && benefits === "") { //changing details and banner
+            if (files) { //if you're changing a banner with it
+                const filePath = `banners/${new Date().getTime()}-${files.name}`;
+                const storageRef = storage.ref(filePath);
+                const uploadTask = storageRef.put(files);
+                uploadTask.on('state_changed', (snapshot) => {
+                    const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+                    addToast("Uploading Image " + progress + "%", { appearance: 'info' });
+                }, (error) => {
+                    console.log(error);
+                }, () => {
+                    uploadTask.snapshot.ref.getDownloadURL().then(async (downloadUrl) => {
+                        try {
+                            addToast("Uploaded Image", { appearance: 'success' })
+                            const fileLocation = uploadTask.snapshot.ref.fullPath;
+                            // Create a reference to the file to delete
+                            var desertRef = storageRef.child(product.bannerPath);
+                            db.collection("Products").doc(currentProduct.path).update({
+                                details: details,
+                                banner: downloadUrl,
+                                bannerPath: fileLocation
+                            }).then(function () {
+                                addToast("Updated Image", { appearance: 'success' })
+                                // Delete the file
+                                desertRef.delete().then(function () {
+                                    // File deleted successfully
+                                    addToast("Deleted Image", { appearance: 'success' })
+
+                                }).catch(function (error) {
+                                    window.location.reload();
+                                    addToast(error, { appearance: 'error' })
+                                });
+                            })
+                        } catch (err) {
+                            console.log(err);
+                        }
+                    }).catch(err => console.log(err));
+                });
+            } else {
+                db.collection("Products").doc(currentProduct.path).update({
+                    details: details,
+                }).then(function () {
+                    addToast(successMessage, { appearance: 'success' })
+                })
+            }
+        } else if (summary === "" && benefits !== "" && details !== "") { //if changing benefits and details
+            if (files) { //if you're changing a banner with it
+                const filePath = `banners/${new Date().getTime()}-${files.name}`;
+                const storageRef = storage.ref(filePath);
+                const uploadTask = storageRef.put(files);
+                uploadTask.on('state_changed', (snapshot) => {
+                    const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+                    addToast("Uploading Image " + progress + "%", { appearance: 'info' });
+                }, (error) => {
+                    console.log(error);
+                }, () => {
+                    uploadTask.snapshot.ref.getDownloadURL().then(async (downloadUrl) => {
+                        try {
+                            addToast("Uploaded Image", { appearance: 'success' })
+                            const fileLocation = uploadTask.snapshot.ref.fullPath;
+                            // Create a reference to the file to delete
+                            var desertRef = storageRef.child(product.bannerPath);
+                            db.collection("Products").doc(currentProduct.path).update({
+                                details: details,
+                                benefit: benefits.split("\n"),
+                                banner: downloadUrl,
+                                bannerPath: fileLocation
+                            }).then(function () {
+                                addToast("Updated Image", { appearance: 'success' })
+                                // Delete the file
+                                desertRef.delete().then(function () {
+                                    // File deleted successfully
+                                    addToast("Deleted Image", { appearance: 'success' })
+
+                                }).catch(function (error) {
+                                    window.location.reload();
+                                    addToast(error, { appearance: 'error' })
+                                });
+                            })
+                        } catch (err) {
+                            console.log(err);
+                        }
+                    }).catch(err => console.log(err));
+                });
+            } else {
+                db.collection("Products").doc(currentProduct.path).update({
+                    details: details,
+                    benefit: benefits.split("\n")
+                }).then(function () {
+                    addToast(successMessage, { appearance: 'success' })
+                })
+            }
+        } else if (details === "" && summary !== "" && benefits !== "") { //if changing summary and benefits
+
+            if (files) { //if you're changing a banner with it
+                const filePath = `banners/${new Date().getTime()}-${files.name}`;
+                const storageRef = storage.ref(filePath);
+                const uploadTask = storageRef.put(files);
+                uploadTask.on('state_changed', (snapshot) => {
+                    const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+                    addToast("Uploading Image " + progress + "%", { appearance: 'info' });
+                }, (error) => {
+                    console.log(error);
+                }, () => {
+                    uploadTask.snapshot.ref.getDownloadURL().then(async (downloadUrl) => {
+                        try {
+                            addToast("Uploaded Image", { appearance: 'success' })
+                            const fileLocation = uploadTask.snapshot.ref.fullPath;
+                            // Create a reference to the file to delete
+                            var desertRef = storageRef.child(product.bannerPath);
+                            db.collection("Products").doc(currentProduct.path).update({
+                                summary: summary,
+                                benefit: benefits.split("\n"),
+                                banner: downloadUrl,
+                                bannerPath: fileLocation
+                            }).then(function () {
+                                addToast("Updated Image", { appearance: 'success' })
+                                // Delete the file
+                                desertRef.delete().then(function () {
+                                    // File deleted successfully
+                                    addToast("Deleted Image", { appearance: 'success' })
+
+                                }).catch(function (error) {
+                                    window.location.reload();
+                                    addToast(error, { appearance: 'error' })
+                                });
+                            })
+                        } catch (err) {
+                            console.log(err);
+                        }
+                    }).catch(err => console.log(err));
+                });
+            } else {
+                db.collection("Products").doc(currentProduct.path).update({
+                    summary: summary,
+                    benefit: benefits.split("\n")
+                }).then(function () {
+                    addToast(successMessage, { appearance: 'success' })
+                })
+            }
+        } else if (benefits === "" && summary !== "" && details !== "") { //changing summary and details
+            if (files) { //if you're changing a banner with it
+                const filePath = `banners/${new Date().getTime()}-${files.name}`;
+                const storageRef = storage.ref(filePath);
+                const uploadTask = storageRef.put(files);
+                uploadTask.on('state_changed', (snapshot) => {
+                    const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+                    addToast("Uploading Image " + progress + "%", { appearance: 'info' });
+                }, (error) => {
+                    console.log(error);
+                }, () => {
+                    uploadTask.snapshot.ref.getDownloadURL().then(async (downloadUrl) => {
+                        try {
+                            addToast("Uploaded Image", { appearance: 'success' })
+                            const fileLocation = uploadTask.snapshot.ref.fullPath;
+                            // Create a reference to the file to delete
+                            var desertRef = storageRef.child(product.bannerPath);
+                            db.collection("Products").doc(currentProduct.path).update({
+                                summary: summary,
+                                details: details,
+                                banner: downloadUrl,
+                                bannerPath: fileLocation
+                            }).then(function () {
+                                addToast("Updated Image", { appearance: 'success' })
+                                // Delete the file
+                                desertRef.delete().then(function () {
+                                    // File deleted successfully
+                                    addToast("Deleted Image", { appearance: 'success' })
+
+                                }).catch(function (error) {
+                                    window.location.reload();
+                                    addToast(error, { appearance: 'error' })
+                                });
+                            })
+                        } catch (err) {
+                            console.log(err);
+                        }
+                    }).catch(err => console.log(err));
+                });
+            } else {
+                db.collection("Products").doc(currentProduct.path).update({
+                    summary: summary,
+                    details: details
+                }).then(function () {
+                    addToast(successMessage, { appearance: 'success' })
+                })
+            }
+        } else {
+            if (files) { //if you're changing a banner with it
+                const filePath = `banners/${new Date().getTime()}-${files.name}`;
+                const storageRef = storage.ref(filePath);
+                const uploadTask = storageRef.put(files);
+                uploadTask.on('state_changed', (snapshot) => {
+                    const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+                    addToast("Uploading Image " + progress + "%", { appearance: 'info' });
+                }, (error) => {
+                    console.log(error);
+                }, () => {
+                    uploadTask.snapshot.ref.getDownloadURL().then(async (downloadUrl) => {
+                        try {
+                            addToast("Uploaded Image", { appearance: 'success' })
+                            const fileLocation = uploadTask.snapshot.ref.fullPath;
+                            // Create a reference to the file to delete
+                            var desertRef = storageRef.child(product.bannerPath);
+                            db.collection("Products").doc(currentProduct.path).update({
+                                summary: summary,
+                                details: details,
+                                benefit: benefits.split("\n"),
+                                banner: downloadUrl,
+                                bannerPath: fileLocation
+                            }).then(function () {
+                                addToast("Updated Image", { appearance: 'success' })
+                                // Delete the file
+                                desertRef.delete().then(function () {
+                                    // File deleted successfully
+                                    addToast("Deleted Image", { appearance: 'success' })
+
+                                }).catch(function (error) {
+                                    window.location.reload();
+                                    addToast(error, { appearance: 'error' })
+                                });
+                            })
+                        } catch (err) {
+                            console.log(err);
+                        }
+                    }).catch(err => console.log(err));
+                });
+            } else {
+                db.collection("Products").doc(currentProduct.path).update({
+                    summary: summary,
+                    details: details,
+                    benefit: benefits.split("\n")
+                }).then(function () {
+                    addToast(successMessage, { appearance: 'success' })
+                })
+            }
+        }
     }
 
 
@@ -129,22 +452,29 @@ function EditProductModal({ modalIsOpen, setModalIsOpen, currentProduct }: { mod
                                     </div>
                                     <div className="p-2 w-full">
                                         <div className="relative">
-                                            <label htmlFor="summary" className="leading-7 text-sm text-gray-600">Product Summary</label>
-                                            <textarea id="summary" name="summary" placeholder={product.summary} onChange={e => setSummary(e.target.value)} className="w-full bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:border-blue-500 focus:bg-white focus:ring-2 focus:ring-blue-200 h-32 text-base outline-none text-gray-700 py-1 px-3 resize-none leading-6 transition-colors duration-200 ease-in-out"></textarea>
+                                            <label htmlFor="banner" className="leading-7 text-sm text-gray-600">Change product banner</label>
+                                            <input type="file" id="banner" name="banner" onChange={onFileChange} className="w-full bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:border-blue-500 focus:bg-white focus:ring-2 focus:ring-blue-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out" />
                                         </div>
                                     </div>
+                                    <div className="p-2 w-full">
+                                        <div className="relative">
+                                            <label htmlFor="summary" className="leading-7 text-sm text-gray-600">Product Summary</label>
+                                            <textarea id="summary" name="summary" defaultValue={product.summary} onChange={e => setSummary(e.target.value)} className="w-full bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:border-blue-500 focus:bg-white focus:ring-2 focus:ring-blue-200 h-32 text-base outline-none text-gray-700 py-1 px-3 resize-none leading-6 transition-colors duration-200 ease-in-out"></textarea>
+                                        </div>
+                                    </div>
+
 
                                     <div className="p-2 w-full">
                                         <div className="relative">
                                             <label htmlFor="details" className="leading-7 text-sm text-gray-600">Product Details</label>
-                                            <textarea id="details" name="details" placeholder={product.details} onChange={e => setDetails(e.target.value)} className="w-full bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:border-blue-500 focus:bg-white focus:ring-2 focus:ring-blue-200 h-32 text-base outline-none text-gray-700 py-1 px-3 resize-none leading-6 transition-colors duration-200 ease-in-out"></textarea>
+                                            <textarea id="details" name="details" defaultValue={product.details} onChange={e => setDetails(e.target.value)} className="w-full bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:border-blue-500 focus:bg-white focus:ring-2 focus:ring-blue-200 h-32 text-base outline-none text-gray-700 py-1 px-3 resize-none leading-6 transition-colors duration-200 ease-in-out"></textarea>
                                         </div>
                                     </div>
 
                                     <div className="p-2 w-full">
                                         <div className="relative">
                                             <label htmlFor="benefits" className="leading-7 text-sm text-gray-600">Product Benefits (Put each benefit on its own line)</label>
-                                            <textarea id="benefits" name="benefits" placeholder={product.benefit.join("\n")} onChange={e => setBenefits(e.target.value)} className="w-full bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:border-blue-500 focus:bg-white focus:ring-2 focus:ring-blue-200 h-32 text-base outline-none text-gray-700 py-1 px-3 resize-none leading-6 transition-colors duration-200 ease-in-out"></textarea>
+                                            <textarea id="benefits" name="benefits" defaultValue={product.benefit.join("\n")} onChange={e => setBenefits(e.target.value)} className="w-full bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:border-blue-500 focus:bg-white focus:ring-2 focus:ring-blue-200 h-32 text-base outline-none text-gray-700 py-1 px-3 resize-none leading-6 transition-colors duration-200 ease-in-out"></textarea>
                                         </div>
                                     </div>
 
