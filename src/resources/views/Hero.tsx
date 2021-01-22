@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom'
 
 function Hero() {
     return (
-        <section className="text-gray-400 bg-gray-900 body-font">
+        <section className="text-gray-600 body-font">
             <div className="container mx-auto flex px-5 py-24 items-center justify-center flex-col">
                 <img className="lg:w-2/6 md:w-3/6 w-5/6 mb-10 object-cover object-center rounded" alt="hero" src="https://dummyimage.com/720x600" />
                 <div className="text-center lg:w-2/3 w-full">
@@ -12,7 +12,7 @@ function Hero() {
                     <p className="leading-relaxed mb-8">A group of products that are designed, developed and deployed by Corporate Information Technology Solutions, trading as CITS</p>
                     <div className="flex justify-center">
                         <Link to="/products">
-                            <button className="ml-4 inline-flex text-gray-400 bg-gray-800 border-0 py-2 px-6 focus:outline-none hover:bg-gray-700 hover:text-white rounded text-lg">Learn More</button>
+                            <button className="inline-flex text-white bg-blue-500 border-0 py-2 px-6 focus:outline-none hover:bg-blue-600 rounded text-lg">Learn More</button>
                         </Link>
 
                     </div>

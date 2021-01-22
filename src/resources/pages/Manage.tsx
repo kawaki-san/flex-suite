@@ -8,7 +8,6 @@ import { selectUser, login, logout } from '../../features/userSlice';
 import { Redirect } from 'react-router-dom'
 
 function Manage() {
-
     const user = useSelector(selectUser)
     const dispatch = useDispatch();
 
