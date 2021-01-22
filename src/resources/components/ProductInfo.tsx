@@ -6,6 +6,7 @@ interface Product {
     details: string;
     product: string;
     benefit: Array<string>;
+    banner: string;
 }
 
 function ProductInfo(currentItem: Product) {

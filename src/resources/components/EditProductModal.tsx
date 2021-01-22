@@ -130,21 +130,21 @@ function EditProductModal({ modalIsOpen, setModalIsOpen, currentProduct }: { mod
                                     <div className="p-2 w-full">
                                         <div className="relative">
                                             <label htmlFor="summary" className="leading-7 text-sm text-gray-600">Product Summary</label>
-                                            <textarea id="summary" name="summary" defaultValue={product.summary} onChange={e => setSummary(e.target.value)} className="w-full bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:border-blue-500 focus:bg-white focus:ring-2 focus:ring-blue-200 h-32 text-base outline-none text-gray-700 py-1 px-3 resize-none leading-6 transition-colors duration-200 ease-in-out"></textarea>
+                                            <textarea id="summary" name="summary" placeholder={product.summary} onChange={e => setSummary(e.target.value)} className="w-full bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:border-blue-500 focus:bg-white focus:ring-2 focus:ring-blue-200 h-32 text-base outline-none text-gray-700 py-1 px-3 resize-none leading-6 transition-colors duration-200 ease-in-out"></textarea>
                                         </div>
                                     </div>
 
                                     <div className="p-2 w-full">
                                         <div className="relative">
                                             <label htmlFor="details" className="leading-7 text-sm text-gray-600">Product Details</label>
-                                            <textarea id="details" name="details" defaultValue={product.details} onChange={e => setDetails(e.target.value)} className="w-full bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:border-blue-500 focus:bg-white focus:ring-2 focus:ring-blue-200 h-32 text-base outline-none text-gray-700 py-1 px-3 resize-none leading-6 transition-colors duration-200 ease-in-out"></textarea>
+                                            <textarea id="details" name="details" placeholder={product.details} onChange={e => setDetails(e.target.value)} className="w-full bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:border-blue-500 focus:bg-white focus:ring-2 focus:ring-blue-200 h-32 text-base outline-none text-gray-700 py-1 px-3 resize-none leading-6 transition-colors duration-200 ease-in-out"></textarea>
                                         </div>
                                     </div>
 
                                     <div className="p-2 w-full">
                                         <div className="relative">
                                             <label htmlFor="benefits" className="leading-7 text-sm text-gray-600">Product Benefits (Put each benefit on its own line)</label>
-                                            <textarea id="benefits" name="benefits" defaultValue={product.benefit.join("\n")} onChange={e => setBenefits(e.target.value)} className="w-full bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:border-blue-500 focus:bg-white focus:ring-2 focus:ring-blue-200 h-32 text-base outline-none text-gray-700 py-1 px-3 resize-none leading-6 transition-colors duration-200 ease-in-out"></textarea>
+                                            <textarea id="benefits" name="benefits" placeholder={product.benefit.join("\n")} onChange={e => setBenefits(e.target.value)} className="w-full bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:border-blue-500 focus:bg-white focus:ring-2 focus:ring-blue-200 h-32 text-base outline-none text-gray-700 py-1 px-3 resize-none leading-6 transition-colors duration-200 ease-in-out"></textarea>
                                         </div>
                                     </div>
 

@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import Modal from 'react-modal'
-import { db } from '../../firebaseConfig';
+import { db, storage } from '../../firebaseConfig';
 import { useToasts } from 'react-toast-notifications'
 import SaveIcon from '@material-ui/icons/Save';
 
@@ -17,26 +17,58 @@ function AddProductModal({ modalIsOpen, setModalIsOpen }: { modalIsOpen: boolean
     const [benefits, setBenefits] = useState("")
     const [productID, setProductID] = useState("")
     const [productName, setProductName] = useState("")
+    const [files, setFiles] = useState<File | null>()
     const [details, setDetails] = useState("")
     const [summary, setSummary] = useState("")
 
+    const onFileChange = (e: any) => {
+        setFiles(e.target.files[0]);
+    }
+
+
     const createDocument = async (e: any) => {
         e.preventDefault();
-        db.collection("Products").doc(productID).set({
-            product: productName,
-            summary: summary,
-            details: details,
-            benefit: benefits.split("\n")
-        })
-            .then(function () {
-                addToast("Product has been created successfully", { appearance: 'success' });
-                setModalIsOpen(false);
-            })
-            .catch(function (error) {
-                console.error("Error writing document: ", error);
+        if (files) {
+            const filePath = `banners/${new Date().getTime()}-${files.name}`;
+            const storageRef = storage.ref(filePath);
+            const uploadTask = storageRef.put(files);
+
+
+            uploadTask.on('state_changed', (snapshot) => {
+                const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+                addToast("Uploading Image " + progress + "%", { appearance: 'info' });
+            }, (error) => {
+                console.log(error);
+            }, () => {
+                uploadTask.snapshot.ref.getDownloadURL().then(async (downloadUrl) => {
+                    try {
+                        addToast("Successfully uploaded" + downloadUrl, { appearance: 'info' });
+                        db.collection("Products").doc(productID).set({
+                            product: productName,
+                            summary: summary,
+                            details: details,
+                            benefit: benefits.split("\n"),
+                            banner: downloadUrl
+                        })
+                            .then(function () {
+                                addToast("Product has been created successfully", { appearance: 'success' });
+                                setModalIsOpen(false);
+                            })
+                            .catch(function (error) {
+                                console.error("Error writing document: ", error);
+                            });
+
+
+                    } catch (err) {
+                        console.log(err);
+                    }
+                }).catch(err => console.log(err));
             });
 
+
+        }
     }
+
 
     return (
         <div>
@@ -52,13 +84,19 @@ function AddProductModal({ modalIsOpen, setModalIsOpen }: { modalIsOpen: boolean
                                 <div className="p-2 w-full">
                                     <div className="relative">
                                         <label htmlFor="prodID" className="leading-7 text-sm text-gray-600">Product ID consider appending the product name to flex- </label>
-                                        <input type="text" id="prodID" defaultValue="flex-new-product" onChange={e => setProductID(e.target.value)} name="prodID" className="w-full bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:border-blue-500 focus:bg-white focus:ring-2 focus:ring-blue-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out" />
+                                        <input type="text" id="prodID" placeholder="flex-new-product" onChange={e => setProductID(e.target.value)} name="prodID" className="w-full bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:border-blue-500 focus:bg-white focus:ring-2 focus:ring-blue-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out" />
                                     </div>
                                 </div>
                                 <div className="p-2 w-full">
                                     <div className="relative">
                                         <label htmlFor="prodName" className="leading-7 text-sm text-gray-600">Product Name</label>
-                                        <input type="text" id="prodName" name="prodName" onChange={e => setProductName(e.target.value)} defaultValue="Flex New Product" className="w-full bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:border-blue-500 focus:bg-white focus:ring-2 focus:ring-blue-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out" />
+                                        <input type="text" id="prodName" name="prodName" onChange={e => setProductName(e.target.value)} placeholder="Flex New Product" className="w-full bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:border-blue-500 focus:bg-white focus:ring-2 focus:ring-blue-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out" />
+                                    </div>
+                                </div>
+                                <div className="p-2 w-full">
+                                    <div className="relative">
+                                        <label htmlFor="banner" className="leading-7 text-sm text-gray-600">Upload your product banner, Use 1200x500 sizes for best results</label>
+                                        <input type="file" id="banner" name="banner" onChange={onFileChange} className="w-full bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:border-blue-500 focus:bg-white focus:ring-2 focus:ring-blue-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out" />
                                     </div>
                                 </div>
                                 <div className="p-2 w-full">
