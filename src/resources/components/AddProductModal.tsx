@@ -42,13 +42,14 @@ function AddProductModal({ modalIsOpen, setModalIsOpen }: { modalIsOpen: boolean
             }, () => {
                 uploadTask.snapshot.ref.getDownloadURL().then(async (downloadUrl) => {
                     try {
-                        addToast("Successfully uploaded" + downloadUrl, { appearance: 'info' });
+                        const fileLocation = uploadTask.snapshot.ref.fullPath;
                         db.collection("Products").doc(productID).set({
                             product: productName,
                             summary: summary,
                             details: details,
                             benefit: benefits.split("\n"),
-                            banner: downloadUrl
+                            banner: downloadUrl,
+                            bannerPath: fileLocation,
                         })
                             .then(function () {
                                 addToast("Product has been created successfully", { appearance: 'success' });

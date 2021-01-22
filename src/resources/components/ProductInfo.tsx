@@ -21,7 +21,7 @@ function ProductInfo(currentItem: Product) {
                 <div className="container px-5 py-24 mx-auto flex flex-col">
                     <div className="lg:w-4/6 mx-auto">
                         <div className="rounded-lg h-64 overflow-hidden">
-                            <img alt="content" className="object-cover object-center h-full w-full" src="https://dummyimage.com/1200x500" />
+                            <img alt="content" className="object-cover object-center h-full w-full" src={currentItem.banner} />
                         </div>
                         <div className="text-center mt-10">
                             <p className="text-base leading-relaxed xl:w-2/4 lg:w-3/4 mx-auto text-gray-400 text-opacity-80">{currentItem.summary}</p>
